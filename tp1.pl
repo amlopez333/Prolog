@@ -58,3 +58,52 @@ decr([He|Hz], Ae, As, Es2, Es) :-
 	append(R2z, [R2], Asn),
 	salida(R2, Es2, Es3),
 	decr(Hz, Aen, Asn, Es3, Es).
+	
+	
+/*producto cartesiano*/
+pares([A|_],[C|_],Z):- Z=[A,C].
+pares([A|B],[_|D],Z):- pares([A|B],D,Z).
+
+cartesiano([],_,_).
+cartesiano([A|B],[C|D],Z):-   pares([A|B],[C|D],Z);
+                            cartesiano(B,[C|D],Z).
+
+
+/*potencia*/
+potencia([],[]).
+potencia([_|T], P):- potencia(T,P).
+potencia([H|T], [H|P]):- potencia(T,P).
+
+
+/*bpp*/
+bpp(_,[],S):- S=[],!.
+bpp(X,[H|T],S):- (
+    X==H -> write(H), write('\n'), S=[H|T],!;
+            pr(X,[H|T],S)
+).
+
+pr(_,[],_).
+pr(X,[H|T],S):-
+    atom(H),(nonvar(S) -> 
+                true,!;
+                write(H), write(' ')
+            ),
+            (X==H -> 
+                S=H,write('\n'),true;
+                pr(X,T,S),!
+            ),!;
+    compound(H),(primero(X,H) ->
+                    write(X),
+                    S=H;
+                    pr(X,H,S),
+                    pr(X,T,S),
+                    (nonvar(S) -> true,!;
+                                    S=[]
+                    )
+                ).
+
+primero(X,[H|_]):-
+    (
+        X==H -> true;
+                false
+    ).

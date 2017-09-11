@@ -1,3 +1,4 @@
+cabeza([H|_],H).
 indexOf([Elemento|_], Elemento, 0):- !.
 indexOf([_|Cola], Elemento, Index):-
   indexOf(Cola, Elemento, Index1),
@@ -37,3 +38,23 @@ creaPar(V1, V2, L1, L2) :-
 
 encriptar(He, Ae, As, Enc, Par) :-
 	encr(He, Ae, As, [], Enc, [], Par).
+
+decriptar(He, Ae, As, [Ef|Efz], Es) :-
+    indexOf(Ae, Ef, I1),
+    girar(Ae, I1, R1),
+    print(R1),
+    cabeza(Efz, Efz2),
+    indexOf(As, Efz2, I2),
+    girar(As, I2, R2),
+    print(R2),
+    decr(He, R1, R2, [], Es).
+    
+decr([], _, _, Es, Es) :- 
+!.
+
+decr([He|Hz], Ae, As, Es2, Es) :-
+	girarEngranajes(Ae, As, He, [R1|R1z], [R2|R2z]),
+    append(R1z, [R1], Aen),
+	append(R2z, [R2], Asn),
+	salida(R2, Es2, Es3),
+	decr(Hz, Aen, Asn, Es3, Es).

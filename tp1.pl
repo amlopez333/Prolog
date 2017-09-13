@@ -22,7 +22,7 @@ girarEngranajes(L1, L2, Cabeza, R1, R2) :-
 encr([], _, _, Enc, Enc, Pares, Pares) :- 
 !.
 
-encr([He|Hz], Ae, As, Enc2, Enc, ParN, Pares) :-
+encr([He|Hz], Ae, As, Enc2, Enc, _, Pares) :-
 	girarEngranajes(Ae, As, He, [R1|R1z], [R2|R2z]),
 	append(R1z, [R1], Aen),
 	append(R2z, [R2], Asn),
@@ -107,3 +107,19 @@ primero(X,[H|_]):-
         X==H -> true;
                 false
     ).
+	
+
+listaP([]).
+listaP([_|Y]):-
+	listaP(Y).
+
+bapAux(N, [N|_], N, Cola) :-
+	print(Cola).
+bapAux(N, [A|C], S, Cola):-
+	listaP(A),
+	bapAux(N, A, S, Cola).
+bapAux(N, [A|C], S, Cola):-
+	append(Cola, [A], Cola2),
+	bapAux(N, C, S, Cola2).
+bap(N, A, S):-
+	bapAux(N, A, S, []).

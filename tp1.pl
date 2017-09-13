@@ -1,10 +1,21 @@
+% -- cabeza/2(+X,-Z): retorna la cabeza de la lista
+%	X: Lista
+%	Z: variable libre
 cabeza([H|_],H).
+% -- indexOf/3(+X,+Y,-Z): Retorna el indice del elemento Y en X
+%	X: Lista
+%	Y: atomo
+%	Z: variable libre
 indexOf([Elemento|_], Elemento, 0):- !.
 indexOf([_|Cola], Elemento, Index):-
   indexOf(Cola, Elemento, Index1),
   !,
   Index is Index1+1.
 
+% -- girar/3(+X,+Y,-Z): gira la lista X una cantidad Y de veces
+%	X: lista
+%	Y: atomo
+%	Z: variable libre
 girar(List,0,List) :-
 !.
 
@@ -14,11 +25,27 @@ girar([H|T],X,R) :-
 	append(T,[H], Nlist),
 	girar(Nlist, Y, R).
 
+% -- girarEngranajes/5(+X,+Y,+C,-W,-Z): Gira la lista X hasta que su cabeza sea C. 
+% -- Gira la lista Y la cantidad de veces que giró X.
+%	X: Lista
+%	Y: Lista 
+%   C: atomo
+%   W: atomo
+%	Z: variable libre
 girarEngranajes(L1, L2, Cabeza, R1, R2) :-
 	indexOf(L1, Cabeza, I),
 	girar(L1, I, R1),
 	girar(L2, I, R2).
 
+% -- encr/7(+X,+Y,+C,+W,-Z,+O,-P): Auxiliar para encriptacion. 
+% -- 
+%	X: Lista
+%	Y: Lista 
+%   C: Lista
+%   W: Lista
+%	Z: variable libre
+%   O: Lista
+%   P: variable libre
 encr([], _, _, Enc, Enc, Pares, Pares) :- 
 !.
 
@@ -29,26 +56,44 @@ encr([He|Hz], Ae, As, Enc2, Enc, _, Pares) :-
 	salida(R2, Enc2, Enc3),
 	encr(Hz, Aen, Asn, Enc3, Enc, [R1,R2], Pares).
 
+% -- salida/3(+X,+Y,-Z): Crea una lista X de valores Y. 
+% -- Gira la lista Y la cantidad de veces que giró X.
+%	X: Atomo
+%	Y: Lista 
+%	Z: variable libre
 salida(V, L, L2) :-
 	append(L, [V], L2).
 
-creaPar(V1, V2, L1, L2) :-
-	append(L1, [V1, V2], L2).
 
-
+% -- encripta/5(+X,+Y,+C,-W,-Z): Encripta la hilera X. 
+%	X: Lista
+%	Y: Lista 
+%   C: Lista
+%   W: Variable Libre
+%	Z: variable libre
 encriptar(He, Ae, As, Enc, Par) :-
 	encr(He, Ae, As, [], Enc, [], Par).
 
+% -- decripta/5(+X,+Y,+C,+W,-Z): Decripta la hilera X. 
+%	X: Lista
+%	Y: Lista 
+%   C: Lista
+%   W: Lista
+%	Z: variable libre
 decriptar(He, Ae, As, [Ef|Efz], Es) :-
     indexOf(Ae, Ef, I1),
     girar(Ae, I1, R1),
-    print(R1),
     cabeza(Efz, Efz2),
     indexOf(As, Efz2, I2),
     girar(As, I2, R2),
-    print(R2),
     decr(He, R1, R2, [], Es).
-    
+
+% -- decr/5(+X,+Y,+C,+W,-Z): Auxiliar para decriptar. 
+%	X: Lista
+%	Y: Lista 
+%   C: Lista
+%   W: Lista
+%	Z: variable libre
 decr([], _, _, Es, Es) :- 
 !.
 
@@ -134,12 +179,13 @@ listaP([_|Y]):-
 	listaP(Y).
 
 bapAux(N, [N|_], N, Cola) :-
-	print(Cola).
+    append(Cola, [N], Cola2),
+	print(Cola2), !.
 bapAux(N, [A|C], S, Cola):-
 	listaP(A),
 	bapAux(N, A, S, Cola).
-bapAux(N, [A|C], S, Cola):-
-	append(Cola, [A], Cola2),
-	bapAux(N, C, S, Cola2).
-bap(N, A, S):-
-	bapAux(N, A, S, []).
+bapAux(N, [A|C], S, [Cola|_]):-
+    print(Cola),
+	bapAux(N, C, S, [A]).
+bap(N, [A|C], S):-
+	bapAux(N, C, S, [A]).

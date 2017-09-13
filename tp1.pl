@@ -61,27 +61,44 @@ decr([He|Hz], Ae, As, Es2, Es) :-
 	
 	
 /*producto cartesiano*/
+% -- pares/3(+A,+C,Z): Z corresponde los pares ordenados formados con elementos de A con elementos de C
+%	A, C: listas
+%	Z: variable libre
 pares([A|_],[C|_],Z):- Z=[A,C].
 pares([A|B],[_|D],Z):- pares([A|B],D,Z).
 
+% -- cartesiano/3(+X,+Y,-Z): Z son los productos cartesianos de X con Y
+%	X, Y: listas
+%	Z: variable libre
 cartesiano([],_,_).
 cartesiano([A|B],[C|D],Z):-   pares([A|B],[C|D],Z);
                             cartesiano(B,[C|D],Z).
 
 
 /*potencia*/
+% -- potencia/2(+X,-Z): Z son los elementos del conjunto potencia de la lista X
+%	X: lista
+%	Z: variable libre
 potencia([],[]).
 potencia([_|T], P):- potencia(T,P).
 potencia([H|T], [H|P]):- potencia(T,P).
 
 
 /*bpp*/
+% -- bpp/3(+X,+Y,-Z): realiza la busqueda del subarbol "Z" de Y cuya raíz es X
+%	X: atomo
+%	Y: lista con sublistas (arbol)
+%	Z: variable libre
 bpp(_,[],S):- S=[],!.
 bpp(X,[H|T],S):- (
     X==H -> write(H), write('\n'), S=[H|T],!;
             pr(X,[H|T],S)
 ).
 
+% -- pr/3(+X,+Y,-Z): auxiliar para encontrar el subarbol de Y cuya raíz es X ( busqueda a partir del segundo elemento de la lista)
+%	X: atomo
+%	Y: lista (con sublistas)
+%	Z: variable libre
 pr(_,[],_).
 pr(X,[H|T],S):-
     atom(H),(nonvar(S) -> 
@@ -102,6 +119,9 @@ pr(X,[H|T],S):-
                     )
                 ).
 
+% -- primero/2(+X,+Y): chequea si el primer elemento de Y es igual (unificable) a X
+%	X: atomo
+%	Y: lista
 primero(X,[H|_]):-
     (
         X==H -> true;
